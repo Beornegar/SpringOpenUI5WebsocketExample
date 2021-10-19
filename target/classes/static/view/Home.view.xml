@@ -1,0 +1,28 @@
+<mvc:View
+	controllerName="sap.ui.demo.basicTemplate.controller.Home"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	<Page
+		id="page"
+		title="{i18n>title}">
+		<headerContent>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Text text="{= ${/connected} === true ? 'Connected' : 'Not Connected'}" />
+				<ToolbarSpacer/>
+			</Toolbar>
+		</headerContent>
+		<content>		
+			<Input value="{/name}" />
+			<Button text="Send Message" press="onSendMessageButtonClick" />
+		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="Connect Websocket" press="onPressConnectWebsocketButton"/>
+				<Button text="Disconnect Websocket" press="onPressDisconnectWebsocketButton"/>
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>
