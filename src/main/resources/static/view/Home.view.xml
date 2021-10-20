@@ -1,27 +1,42 @@
 <mvc:View
 	controllerName="sap.ui.demo.basicTemplate.controller.Home"
-	displayBlock="true"
-	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc">
-	<Page
-		id="page"
-		title="{i18n>title}">
+	displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+	<Page id="page" title="{i18n>title}">
 		<headerContent>
 			<Toolbar>
-				<ToolbarSpacer/>
-				<Text text="{= ${/connected} === true ? 'Connected' : 'Not Connected'}" />
-				<ToolbarSpacer/>
+				<ToolbarSpacer />
+				<Text
+					text="{= ${/connected} === true ? 'Connected' : 'Not Connected'}" />
+				<ToolbarSpacer />
 			</Toolbar>
 		</headerContent>
-		<content>		
-			<Input value="{/name}" />
-			<Button text="Send Message" press="onSendMessageButtonClick" />
+		<content>
+			<List id="messageList" items="{/messages}">
+				<items>
+					<StandardListItem title="{message}" />
+				</items>
+				<headerToolbar>
+					<Toolbar>
+						<ToolbarSpacer />
+						<Input value="{/name}" width="15%" />
+						<Input value="{/nextMessage}"  width="25%"  />
+						<Input value="{/groupId}"  width="25%"  />
+						<Button text="Send Message"
+							press="onSendMessageButtonClick"  width="15%"  />
+						<Button text="Get Time"
+							press="onGetTimeButtonClick"  width="auto"  />
+					</Toolbar>
+				</headerToolbar>
+			</List>
+
 		</content>
 		<footer>
 			<Toolbar>
-				<ToolbarSpacer/>
-				<Button text="Connect Websocket" press="onPressConnectWebsocketButton"/>
-				<Button text="Disconnect Websocket" press="onPressDisconnectWebsocketButton"/>
+				<ToolbarSpacer />
+				<Button text="Connect Websocket"
+					press="onPressConnectWebsocketButton" />
+				<Button text="Disconnect Websocket"
+					press="onPressDisconnectWebsocketButton" />
 			</Toolbar>
 		</footer>
 	</Page>

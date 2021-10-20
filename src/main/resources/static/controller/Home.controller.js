@@ -9,26 +9,11 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("sap.ui.demo.basicTemplate.controller.Home", {
-
-		_messageTopic: '/topic/greetings',
+		_oModel: null,
+		_messageTopic: '/topic/messages',
+		_timeTopic: "/topic/time/group/",
 
 		formatter: formatter,
-
-		_onReceiveGreetingFromTopic: function(oReceivedMessage) {
-			console.log(oReceivedMessage);
-
-			if (!oReceivedMessage && !oReceivedMessage.body) {
-				console.error("Body not existing");
-			}
-
-			const message = JSON.parse(oReceivedMessage.body);
-
-			if (message && message.content) {
-				MessageToast.show(message.content);
-			} else {
-				console.error("Message Content not send");
-			}
-		},
 
 		_initWebsocket: function() {
 			const oModel = this.getView().getModel();
@@ -36,7 +21,29 @@ sap.ui.define([
 		},
 
 		_connectWebsocket: function() {
-			Websocket.connect(this._messageTopic, this._onReceiveGreetingFromTopic);
+			const groupId = this._oModel.getProperty("/groupId") ?? "1";
+			
+			const _onReceiveMessageFromServer = (oReceivedMessage) => {
+				if (!oReceivedMessage && !oReceivedMessage.body) {
+					console.error("Body not existing");
+				}
+				const messages = this._oModel.getProperty("/messages");
+				const message = JSON.parse(oReceivedMessage.body);
+
+				if (message && message.content) {
+					MessageToast.show("New message received!");
+					messages.push({ message: message.content });
+					this._oModel.setProperty("/messages", messages);
+				} else {
+					console.error("Message Content not send");
+				}
+			};
+			
+			Websocket.connect().then(() => {
+				Websocket.subscribe(this._messageTopic, _onReceiveMessageFromServer);
+				Websocket.subscribe(this._timeTopic + groupId, _onReceiveMessageFromServer);
+				this._oModel.setProperty("/connected", true);
+			});
 		},
 
 		onInit: function() {
@@ -51,16 +58,31 @@ sap.ui.define([
 		},
 
 		onAfterRendering: function() {
-			this.getView().getModel().setProperty("/name", "Test");
-			this.getView().getModel().setProperty("/connected", "false");
+			const model = this.getView().getModel();
+			model.setProperty("/name", "");
+			model.setProperty("/nextMessage", "");
+			model.setProperty("/groupId", "1");
+			model.setProperty("/connected", false);
+			model.setProperty("/messages", []);
+
+			this._oModel = model;
 
 			this._initWebsocket();
 			this._connectWebsocket();
 		},
 
+		onGetTimeButtonClick: async function() {
+			const oModel = this._oModel;
+			const groupId = oModel.getProperty("/groupId");
+
+
+			await fetch("/message/sendTime?groupId=" + groupId);
+		},
+
 		onSendMessageButtonClick: function() {
 			const name = this.getView().getModel().getProperty("/name");
-			Websocket.sendName(name);
+			const message = this.getView().getModel().getProperty("/nextMessage");
+			Websocket.sendMessage(name, message);
 		},
 
 		onPressConnectWebsocketButton: function() {
@@ -69,7 +91,6 @@ sap.ui.define([
 
 		onPressDisconnectWebsocketButton: function() {
 			Websocket.disconnect();
-
 		}
 
 	});

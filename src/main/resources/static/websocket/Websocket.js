@@ -3,18 +3,34 @@ sap.ui.define(["../lib/SockJS", "../lib/StompJS"], function(SockJSLibrary, Stomp
 
 	let stompClient = null;
 	let oModel = null;
+	let connectedTopics = [];
 
 	function init(model) {
 		oModel = model;
 	}
 
-	function connect(sTopic, fCallBack) {
+	function connect() {
+		const headers = {};
 		const socket = new SockJS('/gs-guide-websocket');
 		stompClient = Stomp.over(socket);
-		stompClient.connect({}, function() {
-			stompClient.subscribe(sTopic, fCallBack); //Topic: '/topic/greetings'
-			oModel.setProperty("/connected", true);
+
+		return new Promise(function(resolve, reject) {
+			stompClient.connect(headers, function() {
+				resolve();
+			}, function() {
+				reject();
+			});
 		});
+	}
+
+	function subscribe(sTopic, fCallBack) {
+		const subscribedTopic = stompClient.subscribe(sTopic, fCallBack);
+		connectedTopics.push(subscribedTopic);
+		return subscribedTopic;
+	}
+
+	function unsubscribe(sTopic) {
+		stompClient.unsubscribe(sTopic);
 	}
 
 	function disconnect() {
@@ -24,15 +40,17 @@ sap.ui.define(["../lib/SockJS", "../lib/StompJS"], function(SockJSLibrary, Stomp
 		oModel.setProperty("/connected", false);
 	}
 
-	function sendName(sName) {
-		stompClient.send("/app/hello", {}, JSON.stringify({ 'name': sName }));
+	function sendMessage(sName, sMessage) {
+		stompClient.send("/app/message", {}, JSON.stringify({ name: sName, message: sMessage }));
 	}
 
 
 	return {
 		init: init,
-		sendName: sendName,
+		sendMessage: sendMessage,
 		connect: connect,
-		disconnect: disconnect
+		disconnect: disconnect,
+		subscribe: subscribe,
+		unsubscribe: unsubscribe
 	};
 });
