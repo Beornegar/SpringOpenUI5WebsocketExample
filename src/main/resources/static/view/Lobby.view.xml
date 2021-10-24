@@ -1,0 +1,33 @@
+<mvc:View
+	controllerName="sap.ui.demo.basicTemplate.controller.Lobby"
+	displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:f="sap.f" xmlns:card="sap.f.cards">
+	<Page id="lobby" title="{i18n>title}">
+		<content>
+			<f:Card>
+				<f:header>
+					<card:Header title="Login"
+						subtitle="Log into a chat lobby"
+						iconSrc="sap-icon://bus-public-transport" />
+				</f:header>
+				<f:content>
+					<VBox height="110px" class="sapUiSmallMargin"
+						justifyContent="SpaceBetween">
+						<HBox justifyContent="SpaceBetween">
+							<Text text="Name" />
+							<Input value="{/name}" />
+						</HBox>
+						<HBox justifyContent="SpaceBetween">
+							<Text text="Lobby" />
+							<Input value="{/groupId}" />
+						</HBox>
+						<HBox renderType="Bare" justifyContent="SpaceBetween">
+							<Button text="Login" press=".onLoginButtonPress" enabled="{ parts: ['/name', '/groupId'], formatter: '.formatter.isLoginButtonEnabled' }"
+								type="Emphasized" class="sapUiTinyMarginBegin" />
+						</HBox>
+					</VBox>
+				</f:content>
+			</f:Card>
+		</content>
+	</Page>
+</mvc:View>

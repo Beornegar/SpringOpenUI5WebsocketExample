@@ -1,8 +1,9 @@
 package com.dkraus.websocket.websocket;
 
 public enum Topics {
-	MESSAGE("/topic/messages"),
-	SYSTEM_TIME("/topic/time/group/");
+	SYSTEM_WIDE_MESSAGE("/topic/messages"),
+	SYSTEM_TIME("/topic/time/group/"),
+	GROUP_MESSAGE("/topic/messages/group");
 
 	private final String value;
 

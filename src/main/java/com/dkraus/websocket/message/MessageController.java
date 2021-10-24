@@ -30,7 +30,7 @@ public class MessageController {
 	 * @return
 	 * @throws Exception
 	 */
-	@MessageMapping("/message")
+	@MessageMapping("/message/serverMessage")
 	@SendTo("/topic/messages")
 	public Message greeting(ChatMessageRequest message) throws Exception {
 		Thread.sleep(1000); // simulated delay
@@ -43,4 +43,10 @@ public class MessageController {
 		webSocketService.send(Topics.SYSTEM_TIME.getValue() + groupId, LocalDateTime.now().toString());
 	}
 
+	@GetMapping("/message")
+	public void sendTime(@RequestParam("groupId") Long groupId, @RequestParam("name") String name,
+			@RequestParam("message") String message) {
+		webSocketService.send(Topics.GROUP_MESSAGE.getValue() + groupId,
+				HtmlUtils.htmlEscape(name) + ": " + HtmlUtils.htmlEscape(message));
+	}
 }

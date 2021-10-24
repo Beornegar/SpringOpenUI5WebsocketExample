@@ -1,0 +1,47 @@
+<mvc:View
+	controllerName="sap.ui.demo.basicTemplate.controller.Chat"
+	displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+	<Page id="chat">
+		<headerContent>
+			<Toolbar>
+				<Text text="Group: {/groupId}" />
+				<ToolbarSpacer />
+				<Text text="Name: {/name}" />
+				<ToolbarSpacer />
+				<Text
+					text="{= ${/connected} === true ? 'Connected' : 'Not Connected'}" />
+				<ToolbarSpacer />
+			</Toolbar>
+		</headerContent>
+		<content>
+			<List id="messageList" items="{/messages}">
+				<items>
+					<StandardListItem title="{message}" />
+				</items>
+				<headerToolbar>
+					<Toolbar>
+						<Text text="Message: " />
+						<Input value="{/nextMessage}" width="40%" />
+						<Button text="Send Message"
+							press="onSendMessageButtonClick" width="auto" />
+						<ToolbarSpacer />
+						<Button text="Get Time" press="onGetTimeButtonClick"
+							width="auto" />
+							<Button text="Send as system message"
+							press="onSendSystemMessageButtonClick" width="auto" />
+					</Toolbar>
+				</headerToolbar>
+			</List>
+
+		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer />
+				<Button text="Connect Websocket"
+					press="onPressConnectWebsocketButton" />
+				<Button text="Disconnect Websocket"
+					press="onPressDisconnectWebsocketButton" />
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>

@@ -77,16 +77,27 @@
 			"routes": [
 				{
 					"pattern": "",
-					"name": "home",
-					"target": ["home"]
+					"name": "lobby",
+					"target": ["lobby"]
+				},
+				{
+					"pattern": "chat/{groupId}",
+					"name": "chat",
+					"target": ["chat"]
 				}
 			],
 			"targets": {
-				"home": {
-					"viewName": "Home",
-					"viewId": "home",
+				"lobby": {
+					"viewName": "Lobby",
+					"viewId": "lobby",
 					"viewLevel": 1,
 					"title": "{i18n>title}"
+				},
+				"chat": {
+					"viewName": "Chat",
+					"viewId": "chat",
+					"viewLevel": 2,
+					"title": "{i18n>chat.page.title}"
 				}
 			}
 		}
